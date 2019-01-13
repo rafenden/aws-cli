@@ -322,3 +322,25 @@ class TestS3Uploader(unittest.TestCase):
         invalid_metadata = ["key", "val"]
         with self.assertRaises(TypeError):
             s3uploader.artifact_metadata = invalid_metadata
+
+    def test_to_path_style_s3_url_custom_endpoint_url(self):
+        key = "path/to/file"
+        version = "someversion"
+        region = "us-west-2"
+        endpoint_url = "http://localhost"
+
+        s3uploader = S3Uploader(
+            self.s3client, self.bucket_name, region, endpoint_url=endpoint_url)
+        result = s3uploader.to_path_style_s3_url(key, version)
+        self.assertEqual(
+                result,
+                "{0}/{1}/{2}?versionId={3}".format(
+                    endpoint_url, self.bucket_name, key, version))
+
+        # Without versionId, that query parameter should be omitted
+        s3uploader = S3Uploader(self.s3client, self.bucket_name, region, endpoint_url=endpoint_url)
+        result = s3uploader.to_path_style_s3_url(key)
+        self.assertEqual(
+                result,
+                "{0}/{1}/{2}".format(
+                        endpoint_url, self.bucket_name, key))

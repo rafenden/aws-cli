@@ -52,6 +52,8 @@ PARAMFILE_DISABLED = set([
     'custom.package.template-file',
     # aws cloudformation deploy --template-file
     'custom.deploy.template-file',
+    # aws cloudformation package --s3-endpoint-url
+    'custom.package.s3-endpoint-url',
 
     'cloudformation.update-stack.stack-policy-during-update-url',
     # We will want to change the event name to ``s3`` as opposed to

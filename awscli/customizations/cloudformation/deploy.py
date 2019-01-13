@@ -94,7 +94,15 @@ class DeployCommand(BasicCommand):
                 ' the S3 bucket.'
             )
         },
-
+        {
+            'name': 's3-endpoint-url',
+            'help_text': (
+                'URL of storage service where packaged templates and artifacts'
+                ' will be uploaded. Useful for testing and local development'
+                ' or when uploading to a non-AWS storage service that is'
+                ' nonetheless S3-compatible.'
+            )
+        },
         {
             'name': 'kms-key-id',
             'help_text': (
@@ -276,14 +284,16 @@ class DeployCommand(BasicCommand):
                 "s3",
                 config=Config(signature_version='s3v4'),
                 region_name=parsed_globals.region,
-                verify=parsed_globals.verify_ssl)
+                verify=parsed_globals.verify_ssl,
+                endpoint_url=parsed_args.s3_endpoint_url)
 
             s3_uploader = S3Uploader(s3_client,
                                       bucket,
                                       parsed_globals.region,
                                       parsed_args.s3_prefix,
                                       parsed_args.kms_key_id,
-                                      parsed_args.force_upload)
+                                      parsed_args.force_upload,
+                                      endpoint_url=parsed_args.s3_endpoint_url)
         else:
             s3_uploader = None
 
